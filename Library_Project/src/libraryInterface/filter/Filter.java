@@ -1,6 +1,10 @@
 package libraryInterface.filter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import libraryInterface.client.ClientActionsService;
 import model.library.DepartmentType;
@@ -11,6 +15,7 @@ import model.library.book.Genre;
 
 public class Filter {
 
+	List<Book> filteredBooks = new ArrayList<>();
 	private ClientActionsService clientActionsService;
 
 	public Filter(ClientActionsService clientActionsService) {
@@ -21,7 +26,6 @@ public class Filter {
 
 		FilterType action;
 		DepartmentType dept = clientActionsService.setDepartment(in);
-		
 
 		while (true) {
 			System.out.println("Podaj filtr, którego chcia³byœ u¿yæ: ");
@@ -29,7 +33,8 @@ public class Filter {
 			System.out.println("Do wyboru: " + FilterType.AUTHOR + " (" + FilterType.AUTHOR.getAction() + ") | "
 					+ FilterType.CATEGORY + " (" + FilterType.CATEGORY.getAction() + ") | " + FilterType.DESCRIPTION
 					+ " (" + FilterType.DESCRIPTION.getAction() + ") | " + FilterType.GENRE + " ("
-					+ FilterType.GENRE.getAction() + ")");
+					+ FilterType.GENRE.getAction() + ") | " + "\n" + FilterType.LAST_FILTER + " ("
+					+ FilterType.LAST_FILTER.getAction() + ")");
 
 			String filterStr = in.next().toUpperCase();
 			try {
@@ -46,18 +51,12 @@ public class Filter {
 			Scanner author = new Scanner(System.in);
 			System.out.println("Podaj autora");
 			String authorScr = author.nextLine();
-			int count = 0;
 
-			for (Book book : library.getDepartments().get(dept)) {
-				if (book.getAuthor().equals(authorScr)) {
-					System.out.println(book);
-					count++;
-				}
-			}
-			if (count == 0) {
+			filteredBooks = library.getDepartments().get(dept).stream().filter(book -> book.getAuthor().equals(authorScr))
+					.collect(Collectors.toList());
+			filteredBooks.stream().forEach(book -> System.out.println(book));
+			if (filteredBooks.isEmpty())
 				System.out.println("Nie znaleziono ksi¹¿ek tego autora");
-			}
-
 			break;
 
 		case CATEGORY:
@@ -67,12 +66,11 @@ public class Filter {
 			String categoryScr = in.next().toUpperCase();
 			BookType bookType = BookType.valueOf(categoryScr);
 
-			for (Book book : library.getDepartments().get(dept)) {
-				if (book.getBookType().equals(bookType)) {
-					System.out.println(book);
-				}
-			}
-
+			filteredBooks = library.getDepartments().get(dept).stream()
+					.filter(book -> book.getBookType().equals(bookType)).collect(Collectors.toList());
+			filteredBooks.stream().forEach(book -> System.out.println(book));
+			if (filteredBooks.isEmpty())
+				System.out.println("Nie znaleziono ksi¹¿ek z tej kategorii");
 			break;
 
 		case DESCRIPTION:
@@ -117,9 +115,14 @@ public class Filter {
 				} catch (Exception e) {
 					action = FilterType.ILLEGAL;
 				}
-
 			}
 
+			break;
+		case LAST_FILTER:
+			if (filteredBooks.isEmpty()) {
+				System.out.println("Nie przeprowadzono jeszcze filtrowania ksi¹¿ek lub ostatnie wyszukiwanie nie przynios³o wyników");
+			} else
+				filteredBooks.stream().forEach(book -> System.out.println(book));
 			break;
 
 		case ILLEGAL:

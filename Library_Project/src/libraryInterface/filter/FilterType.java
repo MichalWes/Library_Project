@@ -5,6 +5,7 @@ public enum FilterType {
 	GENRE("Filtruj poprzez wybór gatunku/dzia³u"),
 	CATEGORY("Filtruj wg kategorii"),
 	DESCRIPTION("Filtruj wg opisu"),
+	LAST_FILTER("Poka¿ uprzednio wyfiltrowan¹ listê"),
 	ILLEGAL("Niepoprawne polecenie - proszê spróbowaæ ponownie");
 	
 	private String action;
