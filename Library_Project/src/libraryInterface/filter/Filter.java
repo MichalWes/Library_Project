@@ -2,6 +2,7 @@ package libraryInterface.filter;
 
 import java.util.Scanner;
 
+import libraryInterface.client.ClientActionsService;
 import model.library.DepartmentType;
 import model.library.Library;
 import model.library.book.Book;
@@ -9,12 +10,18 @@ import model.library.book.BookType;
 import model.library.book.Genre;
 
 public class Filter {
-	
-	
+
+	private ClientActionsService clientActionsService;
+
+	public Filter(ClientActionsService clientActionsService) {
+		this.clientActionsService = clientActionsService;
+	}
+
 	public void showFiltered(Library library, Scanner in) {
 
 		FilterType action;
-		DepartmentType dept = libraryInterface.LibraryInterface.setDepartment(in);;
+		DepartmentType dept = clientActionsService.setDepartment(in);
+		
 
 		while (true) {
 			System.out.println("Podaj filtr, którego chcia³byœ u¿yæ: ");
@@ -47,18 +54,18 @@ public class Filter {
 					count++;
 				}
 			}
-			if(count == 0) {
+			if (count == 0) {
 				System.out.println("Nie znaleziono ksi¹¿ek tego autora");
 			}
 
 			break;
 
 		case CATEGORY:
-			
+
 			System.out.println("Podaj kategoriê:");
 			System.out.println("Do wyboru: " + BookType.BESTSELLER + " | " + BookType.NORMAL + " | " + BookType.OLD);
 			String categoryScr = in.next().toUpperCase();
-			BookType bookType = BookType.valueOf(categoryScr); 
+			BookType bookType = BookType.valueOf(categoryScr);
 
 			for (Book book : library.getDepartments().get(dept)) {
 				if (book.getBookType().equals(bookType)) {
@@ -81,16 +88,16 @@ public class Filter {
 			}
 
 			break;
-		
+
 		case GENRE:
-			
-			while(true) {
+
+			while (true) {
 				try {
 					int countGenre = 0;
 					System.out.println("Podaj gatunek/dzia³: ");
-					System.out.println("Do wyboru: " + Genre.CHILDREN + " | " + Genre.COOKING + " | " + Genre.FANTASY + " | " + Genre.GUIDE + " | "
-							+ Genre.HISTORY + " | " + Genre.HORROR + " | "+ Genre.MEMOIR + " | " + Genre.ROMANCE + " | " + Genre.SCIENCE_FICTION + " | "
-							+ Genre.TRAVEL + " | ");
+					System.out.println("Do wyboru: " + Genre.CHILDREN + " | " + Genre.COOKING + " | " + Genre.FANTASY
+							+ " | " + Genre.GUIDE + " | " + Genre.HISTORY + " | " + Genre.HORROR + " | " + Genre.MEMOIR
+							+ " | " + Genre.ROMANCE + " | " + Genre.SCIENCE_FICTION + " | " + Genre.TRAVEL + " | ");
 					String genreScr = in.next().toUpperCase();
 					Genre genreType = Genre.valueOf(genreScr);
 
@@ -100,18 +107,17 @@ public class Filter {
 							countGenre++;
 						}
 					}
-					
-					if(countGenre == 0) {
+
+					if (countGenre == 0) {
 						System.out.println("W tym departamencie nie ma takiego dzia³u");
 					}
 
-					
 					break;
 
 				} catch (Exception e) {
 					action = FilterType.ILLEGAL;
 				}
-				
+
 			}
 
 			break;
@@ -122,7 +128,5 @@ public class Filter {
 
 		}
 	}
-	
-	
 
 }

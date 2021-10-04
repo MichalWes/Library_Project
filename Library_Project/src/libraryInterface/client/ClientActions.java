@@ -1,4 +1,4 @@
-package libraryInterface;
+package libraryInterface.client;
 
 public enum ClientActions {
 	
