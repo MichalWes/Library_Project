@@ -67,8 +67,7 @@ public class LibraryActionsService {
 		return action;
 	}
 
-	public void borrow(Library library) {
-		boolean breakBorrow;
+	public boolean borrow(Library library) {
 		if (clientActionsService.getLoggedUser().getMotherDepartment() != clientActionsService.getDepartmentActive()) {
 			System.out.println(
 					"W tym oddziale nie mo¿na wypo¿yczaæ ksi¹¿ek, proszê o skorzystanie z dzia³u macierzystego");
@@ -94,9 +93,9 @@ public class LibraryActionsService {
 							reports.addBookLent(clientActionsService.getDepartmentActive());
 							reports.addBookBorrowedClient(clientActionsService.getLoggedUser(),
 									clientActionsService.getDepartmentActive());
-							breakBorrow = true;
+							return true;
 						} else
-							breakBorrow = true;
+							return false;
 					} else if (clientActionsService.getLoggedUserOrganization() == null
 							&& clientActionsService.getLoggedUser() instanceof Organization) {
 						if (rentalService.clientBorrowConditionsChecker(
@@ -107,9 +106,9 @@ public class LibraryActionsService {
 							reports.addBookLent(clientActionsService.getDepartmentActive());
 							reports.addBookBorrowedClient(clientActionsService.getLoggedUser(),
 									clientActionsService.getDepartmentActive());
-							breakBorrow = true;
+							return true;
 						} else
-							breakBorrow = true;
+							return false;
 					} else {
 						if (rentalService.clientBorrowConditionsChecker((Person) clientActionsService.getLoggedUser(),
 								rentalService, book)) {
@@ -119,7 +118,7 @@ public class LibraryActionsService {
 							reports.addBookLent(clientActionsService.getDepartmentActive());
 							reports.addBookBorrowedClient(clientActionsService.getLoggedUser(),
 									clientActionsService.getDepartmentActive());
-							breakBorrow = true;
+							return true;
 						} else {
 							System.out.println(
 									"Poniewa¿ jesteœ cz³onkiem organizacji, jest mo¿liwoœæ wypo¿yczenia ksi¹¿ki na organizacjê");
@@ -154,22 +153,21 @@ public class LibraryActionsService {
 								reports.addBookLent(clientActionsService.getDepartmentActive());
 								reports.addBookBorrowedClient((Client) clientActionsService.getLoggedUserOrganization(),
 										clientActionsService.getDepartmentActive());
-								breakBorrow = true;
+								return true;
 							}
 						}
-						breakBorrow = true;
-						;
+						return false;
 					}
 				}
 			}
 			System.out.println("Nie ma takiej ksi¹¿ki");
 
 		}
+		return false;
 
 	}
 
-	public void borrowDept(Library library) {
-		boolean breakBorrowDept = false;
+	public boolean borrowDept(Library library) {
 		Scanner bookScannerDept = new Scanner(System.in);
 
 		String bookTitleDept = "";
@@ -188,21 +186,19 @@ public class LibraryActionsService {
 						+ clientActionsService.getLoggedUser().getMotherDepartment());
 				reports.addBookBorrowedOtherDept(clientActionsService.getLoggedUser().getMotherDepartment());
 				reports.addBookLentOtherDept(departmentTypeDept);
-				breakBorrowDept = true;
-				break;
+				return true;
 
 			}
 		}
-		if (!breakBorrowDept)
-			System.out.println("Nie ma takiej ksi¹¿ki");
+		System.out.println("Nie ma takiej ksi¹¿ki");
+		return false;
 
 	}
 
-	public void returnBook(Library library) {
+	public boolean returnBook(Library library) {
 		Scanner bookScannerReturn = new Scanner(System.in);
 		double penaltySum = 0.0;
 		HashMap<Client, HashMap<Client, List<Book>>> borrowedBooks = rentalService.getRentedBooks();
-		boolean breakPozyczanie = false;
 
 		if (clientActionsService.getLoggedUser() != null) {
 			if (borrowedBooks.containsKey(clientActionsService.getLoggedUser())) {
@@ -210,7 +206,7 @@ public class LibraryActionsService {
 						&& borrowedBooks.get(clientActionsService.getLoggedUser())
 								.get(clientActionsService.getLoggedUser()).isEmpty()) {
 					System.out.println("Brak wypo¿yczonych ksi¹¿ek");
-					breakPozyczanie = true;
+					return false;
 				} else if (clientActionsService.getLoggedUser() instanceof Organization && !borrowedBooks
 						.get(clientActionsService.getLoggedUser()).containsKey(clientActionsService.getLoggedUser())) {
 					int num = 0;
@@ -221,7 +217,7 @@ public class LibraryActionsService {
 					}
 					if (num == 0) {
 						System.out.println("Brak wypo¿yczonych ksi¹¿ek");
-						breakPozyczanie = true;
+						return false;
 					}
 				} else if (clientActionsService.getLoggedUser() instanceof Organization
 						&& borrowedBooks.get(clientActionsService.getLoggedUser())
@@ -235,7 +231,7 @@ public class LibraryActionsService {
 					}
 					if (num == 0) {
 						System.out.println("Brak wypo¿yczonych ksi¹¿ek");
-						breakPozyczanie = true;
+						return false;
 					}
 				} else {
 
@@ -254,7 +250,7 @@ public class LibraryActionsService {
 								reports.booksReturnedLate(penaltySum, clientActionsService.getDepartmentActive());
 								reports.penaltyTotalDept(penaltySum, clientActionsService.getDepartmentActive());
 								System.out.println("Pomyœlnie zwrócono ksi¹¿kê");
-								breakPozyczanie = true;
+								return true;
 							}
 						}
 
@@ -270,8 +266,7 @@ public class LibraryActionsService {
 									reports.booksReturnedLate(penaltySum, clientActionsService.getDepartmentActive());
 									reports.penaltyTotalDept(penaltySum, clientActionsService.getDepartmentActive());
 									System.out.println("Pomyœlnie zwrócono ksi¹¿kê wypo¿yczon¹ przez organizacjê");
-
-									breakPozyczanie = true;
+									return true;
 								}
 							}
 
@@ -280,11 +275,14 @@ public class LibraryActionsService {
 
 				}
 				System.out.println("Nie ma takiej wypo¿yczonej ksi¹¿ki");
+				return false;
 
 			} else
 				System.out.println("Nigdy nie wypo¿yczano ¿adnych ksi¹¿ek");
+			return false;
 		} else
 			System.out.println("Brak logowania");
+		return false;
 	}
 
 	void borrowBook(Library library, Book book, Client loggedUser) {
@@ -377,7 +375,7 @@ public class LibraryActionsService {
 		daysBorrowed = bookScannerReturn.nextInt();
 		book.setDaysBorrowed(daysBorrowed);
 		if (daysBorrowed > 14 && daysBorrowed < 22) {
-			rentalService.penaltyAmountCalc(book);
+			penaltySum += rentalService.penaltyAmountCalc(book);
 		} else if (daysBorrowed > 21) {
 			penaltySum += rentalService.penaltyAmountCalc(book);
 			penaltySum += 5;

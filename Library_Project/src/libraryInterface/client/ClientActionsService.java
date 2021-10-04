@@ -14,7 +14,7 @@ public class ClientActionsService {
 	private Client loggedUser;
 	private Organization loggedUserOrganization;
 	private DepartmentType departmentActive;
-	
+
 	public ClientActionsService(List<Client> bazaKlientow) {
 		this.bazaKlientow = bazaKlientow;
 	}
@@ -42,7 +42,7 @@ public class ClientActionsService {
 	public void setDepartmentActive(DepartmentType departmentActive) {
 		this.departmentActive = departmentActive;
 	}
-	
+
 	public ClientActions availableClientActions(Scanner in) {
 		String actionStr;
 		ClientActions action;
@@ -62,16 +62,14 @@ public class ClientActionsService {
 		return action;
 	}
 
-	public void logonId(Scanner in) {
-		boolean breakPowitalny = false;
+	public boolean logonId(Scanner in) {
 		System.out.println("Proszê podaæ ID: ");
 		int clientId = in.nextInt();
 		for (Client client : bazaKlientow) {
 			if (client.getId() == clientId) {
 				if (client.equals(loggedUser)) {
 					System.out.println("Jest ju¿ Pani/Pan/Organizacja zalogowana/y");
-					breakPowitalny = true;
-					break;
+					return true;
 				}
 				departmentActive = setDepartment(in);
 				loggedUser = client;
@@ -84,21 +82,15 @@ public class ClientActionsService {
 					System.out.println("Witaj " + person.getName() + " " + person.getSurName() + "!!!");
 					organizationCheck(person);
 				}
-
 				System.out.println("Poprawnie zalogowano do biblioteki");
-				breakPowitalny = true;
-				break;
-
+				return true;
 			}
 		}
-		if (!breakPowitalny) {
-			System.out.println("Nie znaleziono u¿ytkownika, proszê spróbowaæ ponownie.");
-		}
-
+		System.out.println("Nie znaleziono u¿ytkownika, proszê spróbowaæ ponownie.");
+		return false;
 	}
-	
-	public void logonName(Scanner in) {
-		boolean breakPowitalny = false;
+
+	public boolean logonName(Scanner in) {
 		System.out.println("Proszê podaæ imiê: ");
 		String clientName = in.next();
 		System.out.println("Proszê podaæ nazwisko: ");
@@ -109,25 +101,22 @@ public class ClientActionsService {
 				if (person.getName().equals(clientName) && person.getSurName().equals(clientSurname)) {
 					if (client.equals(loggedUser)) {
 						System.out.println("Jest ju¿ Pani/Pan zalogowana/y");
-						breakPowitalny = true;
+						return true;
 					}
 					departmentActive = setDepartment(in);
 					loggedUser = person;
 					System.out.println("Witaj " + person.getName() + " " + person.getSurName() + "!!!");
 					organizationCheck(person);
 					System.out.println("Poprawnie zalogowano do biblioteki");
-					breakPowitalny = true;
+					return true;
 				}
 			}
 		}
-		if (!breakPowitalny) {
-			System.out.println("Nie znaleziono u¿ytkownika, proszê spróbowaæ ponownie.");
-		}
-
+		System.out.println("Nie znaleziono u¿ytkownika, proszê spróbowaæ ponownie.");
+		return false;
 	}
 
-	public void logonOrganization(Scanner in) {
-		boolean breakPowitalny = false;
+	public boolean logonOrganization(Scanner in) {
 		System.out.println("Proszê podaæ nazwê organizacji: ");
 		String organizationName = in.next();
 		for (Client client : bazaKlientow) {
@@ -136,23 +125,19 @@ public class ClientActionsService {
 				if (organization.getOrganizationName().equals(organizationName)) {
 					if (client.equals(loggedUser)) {
 						System.out.println("Organizacja jest ju¿ zalogowana");
-						breakPowitalny = true;
-						break;
+						return true;
 					}
 					departmentActive = setDepartment(in);
 					loggedUser = organization;
 					System.out.println("Witaj " + organization.getOrganizationName() + "!!!");
 					loggedUserOrganization = null;
 					System.out.println("Poprawnie zalogowano do biblioteki");
-					breakPowitalny = true;
-					break;
+					return true;
 				}
 			}
 		}
-		if (!breakPowitalny) {
-			System.out.println("Nie znaleziono u¿ytkownika, proszê spróbowaæ ponownie.");
-		}
-
+		System.out.println("Nie znaleziono u¿ytkownika, proszê spróbowaæ ponownie.");
+		return false;
 	}
 
 	private void organizationCheck(Person person) {
@@ -172,7 +157,7 @@ public class ClientActionsService {
 					+ " jesteœ zalogowana/y te¿ w jej imieniu");
 		}
 	}
-	
+
 	public void showAllClients() {
 		for (Client client : bazaKlientow) {
 			System.out.println(client);
@@ -183,7 +168,7 @@ public class ClientActionsService {
 	public DepartmentType setDepartment(Scanner in) {
 		while (true) {
 			System.out.println("Proszê wybraæ oddzia³, z którego chcia³aby/chcia³by Pani/Pan skorzystaæ: ");
-			String departmentScr = in.next();
+			String departmentScr = in.next().toUpperCase();
 			DepartmentType departmentLocal;
 			try {
 				departmentLocal = DepartmentType.valueOf(departmentScr);

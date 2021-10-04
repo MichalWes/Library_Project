@@ -37,7 +37,7 @@ public class Filter {
 				break;
 
 			} catch (Exception e) {
-				action = FilterType.ILLEGAL;
+				System.out.println(FilterType.ILLEGAL.getAction());
 			}
 		}
 

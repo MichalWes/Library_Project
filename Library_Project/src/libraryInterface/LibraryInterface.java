@@ -13,7 +13,8 @@ public class LibraryInterface {
 	private LibraryActionsService libraryActionsService;
 	private ClientActionsService clientActionsService;
 
-	public LibraryInterface(Library library, LibraryActionsService libraryActionsService, ClientActionsService clientActionsService) {
+	public LibraryInterface(Library library, LibraryActionsService libraryActionsService,
+			ClientActionsService clientActionsService) {
 		this.library = library;
 		this.libraryActionsService = libraryActionsService;
 		this.clientActionsService = clientActionsService;
@@ -30,27 +31,35 @@ public class LibraryInterface {
 
 	private void clientActions(Library library, Scanner in) {
 		ClientActions action;
-		while (true) {
+		powitalny: while (true) {
 			action = clientActionsService.availableClientActions(in);
 
 			switch (action) {
 			case LOGON_NAME:
-				clientActionsService.logonName(in);
-				break;
+				
+				if (clientActionsService.logonName(in)) {
+					break powitalny;
+				} else
+					break;
 
 			case LOGON_ORGANIZATION:
-				clientActionsService.logonOrganization(in);
-				break;
+				
+				if (clientActionsService.logonOrganization(in)) {
+					break powitalny;
+				} else
+					break;
 
 			case LOGON_ID:
-				clientActionsService.logonId(in);
-				break;
+
+				if (clientActionsService.logonId(in)) {
+					break powitalny;
+				} else
+					break;
 
 			case CHANGE_DEPARTMENT:
 				clientActionsService.setDepartmentActive(clientActionsService.setDepartment(in));
-				libraryActions(library, in);
-				break;
-				
+				break powitalny;
+
 			case SHOW_ALL_CLIENTS:
 				clientActionsService.showAllClients();
 				break;
