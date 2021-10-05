@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import libraryInterface.client.ClientActionsService;
 import model.library.DepartmentType;
@@ -52,8 +51,8 @@ public class Filter {
 			System.out.println("Podaj autora");
 			String authorScr = author.nextLine();
 
-			filteredBooks = library.getDepartments().get(dept).stream().filter(book -> book.getAuthor().equals(authorScr))
-					.collect(Collectors.toList());
+			filteredBooks = library.getDepartments().get(dept).stream()
+					.filter(book -> book.getAuthor().equals(authorScr)).collect(Collectors.toList());
 			filteredBooks.stream().forEach(book -> System.out.println(book));
 			if (filteredBooks.isEmpty())
 				System.out.println("Nie znaleziono ksi¹¿ek tego autora");
@@ -79,19 +78,17 @@ public class Filter {
 			System.out.println("Podaj opis: ");
 			String descriptionScr = description.nextLine();
 
-			for (Book book : library.getDepartments().get(dept)) {
-				if (book.getDescription().equals(descriptionScr)) {
-					System.out.println(book);
-				}
-			}
-
+			filteredBooks = library.getDepartments().get(dept).stream()
+					.filter(book -> book.getDescription().equals(descriptionScr)).collect(Collectors.toList());
+			filteredBooks.stream().forEach(book -> System.out.println(book));
+			if (filteredBooks.isEmpty())
+				System.out.println("Nie znaleziono ksi¹¿ek z tym opisem");
 			break;
 
 		case GENRE:
 
 			while (true) {
 				try {
-					int countGenre = 0;
 					System.out.println("Podaj gatunek/dzia³: ");
 					System.out.println("Do wyboru: " + Genre.CHILDREN + " | " + Genre.COOKING + " | " + Genre.FANTASY
 							+ " | " + Genre.GUIDE + " | " + Genre.HISTORY + " | " + Genre.HORROR + " | " + Genre.MEMOIR
@@ -99,17 +96,11 @@ public class Filter {
 					String genreScr = in.next().toUpperCase();
 					Genre genreType = Genre.valueOf(genreScr);
 
-					for (Book book : library.getDepartments().get(dept)) {
-						if (book.getGenre() == genreType) {
-							System.out.println(book);
-							countGenre++;
-						}
-					}
-
-					if (countGenre == 0) {
-						System.out.println("W tym departamencie nie ma takiego dzia³u");
-					}
-
+					filteredBooks = library.getDepartments().get(dept).stream()
+							.filter(book -> book.getGenre() == genreType).collect(Collectors.toList());
+					filteredBooks.stream().forEach(book -> System.out.println(book));
+					if (filteredBooks.isEmpty())
+						System.out.println("Nie znaleziono ksi¹¿ek z tego gatunku/dzia³u");
 					break;
 
 				} catch (Exception e) {
@@ -120,7 +111,8 @@ public class Filter {
 			break;
 		case LAST_FILTER:
 			if (filteredBooks.isEmpty()) {
-				System.out.println("Nie przeprowadzono jeszcze filtrowania ksi¹¿ek lub ostatnie wyszukiwanie nie przynios³o wyników");
+				System.out.println(
+						"Nie przeprowadzono jeszcze filtrowania ksi¹¿ek lub ostatnie wyszukiwanie nie przynios³o wyników");
 			} else
 				filteredBooks.stream().forEach(book -> System.out.println(book));
 			break;
