@@ -11,6 +11,8 @@ import model.library.Library;
 import model.library.book.Book;
 import model.library.book.BookType;
 import model.library.book.Genre;
+import util.BookGenrePredicate;
+import util.Util;
 
 public class Filter {
 
@@ -53,7 +55,7 @@ public class Filter {
 
 			filteredBooks = library.getDepartments().get(dept).stream()
 					.filter(book -> book.getAuthor().equals(authorScr)).collect(Collectors.toList());
-			filteredBooks.stream().forEach(book -> System.out.println(book));
+			filteredBooks.forEach(System.out::println);
 			if (filteredBooks.isEmpty())
 				System.out.println("Nie znaleziono ksi¹¿ek tego autora");
 			break;
@@ -67,7 +69,7 @@ public class Filter {
 
 			filteredBooks = library.getDepartments().get(dept).stream()
 					.filter(book -> book.getBookType().equals(bookType)).collect(Collectors.toList());
-			filteredBooks.stream().forEach(book -> System.out.println(book));
+			filteredBooks.forEach(System.out::println);
 			if (filteredBooks.isEmpty())
 				System.out.println("Nie znaleziono ksi¹¿ek z tej kategorii");
 			break;
@@ -80,7 +82,7 @@ public class Filter {
 
 			filteredBooks = library.getDepartments().get(dept).stream()
 					.filter(book -> book.getDescription().equals(descriptionScr)).collect(Collectors.toList());
-			filteredBooks.stream().forEach(book -> System.out.println(book));
+			filteredBooks.forEach(System.out::println);
 			if (filteredBooks.isEmpty())
 				System.out.println("Nie znaleziono ksi¹¿ek z tym opisem");
 			break;
@@ -96,9 +98,8 @@ public class Filter {
 					String genreScr = in.next().toUpperCase();
 					Genre genreType = Genre.valueOf(genreScr);
 
-					filteredBooks = library.getDepartments().get(dept).stream()
-							.filter(book -> book.getGenre() == genreType).collect(Collectors.toList());
-					filteredBooks.stream().forEach(book -> System.out.println(book));
+					filteredBooks = Util.filter(library.getDepartments().get(dept), new BookGenrePredicate(genreType));
+					filteredBooks.forEach(System.out::println);
 					if (filteredBooks.isEmpty())
 						System.out.println("Nie znaleziono ksi¹¿ek z tego gatunku/dzia³u");
 					break;

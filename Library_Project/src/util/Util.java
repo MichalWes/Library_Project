@@ -1,8 +1,12 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.DoubleSummaryStatistics;
+import java.util.Iterator;
 import java.util.List;
 
 import model.client.Client;
+import model.library.book.Book;
 
 public class Util {
 	
@@ -27,5 +31,19 @@ public class Util {
 		}
 		return false;
 	}
-
+	
+	public static List<Book> filter(List<Book> books, BookPredicate bookPredicate){
+		List<Book> result = new ArrayList<>();
+		
+		for (Book book : books) {
+			if (bookPredicate.test(book)) {
+				result.add(book);
+			}
+			
+		} 
+		
+		return result;
+		
+		
+	}
 }
