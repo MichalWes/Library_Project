@@ -16,6 +16,7 @@ import model.client.Person;
 import model.library.DepartmentType;
 import model.library.Library;
 import model.library.book.Book;
+import util.Util;
 
 public class LibraryActionsService {
 
@@ -368,7 +369,7 @@ public class LibraryActionsService {
 		if (book.getBorrowedFrom() != clientActionsService.getDepartmentActive()
 				&& book.getBookDepartment() != clientActionsService.getDepartmentActive()) {
 			penaltySum += 2.0;
-			System.out.println("Naliczono op³atê za zwrot do innego oddzia³u w wysokoœci 2PLN");
+			System.out.println(String.format("Naliczono op³atê za zwrot do innego oddzia³u w wysokoœci %s", Util.plNumberFormat.format(2)));
 		}
 
 		System.out.println("Proszê podaæ przez ile dni by³a wypo¿yczona ksi¹¿ka: ");
@@ -379,10 +380,10 @@ public class LibraryActionsService {
 		} else if (daysBorrowed > 21) {
 			penaltySum += rentalService.penaltyAmountCalc(book);
 			penaltySum += 5;
-			System.out.println("Naliczono karê za wys³anie monitu w wysokoœci 5 PLN");
+			System.out.println(String.format("Naliczono karê za wys³anie monitu w wysokoœci %s", Util.plNumberFormat.format(5)));
 
 		}
-		System.out.println(String.format("£¹czna kara to %sPLN", penaltySum));
+		System.out.println(String.format("£¹czna kara to %sPLN", Util.plNumberFormat.format(penaltySum)));
 		return penaltySum;
 	}
 

@@ -1,6 +1,7 @@
 package main;
 
 import java.util.List;
+import java.util.Locale;
 
 import libraryInterface.LibraryActionsService;
 import libraryInterface.LibraryInterface;
@@ -20,6 +21,12 @@ import util.DummyClientGenerator;
 public class Main {
 
 	public static void main(String[] args) {
+		
+		Locale locale = new Locale.Builder()
+				.setLanguage("pl")
+				.setRegion("PL")
+				.build();
+		Locale.setDefault(locale);
 		
 		DummyBooksGenerator dummyBooksGenerator = new DummyBooksGenerator();
 		List<Book> ksiazki = dummyBooksGenerator.generate(80);

@@ -1,8 +1,10 @@
 package libraryInterface.rental;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import model.client.Client;
 import model.client.Organization;
@@ -10,18 +12,21 @@ import model.client.Person;
 import model.library.book.Book;
 import model.library.book.BookType;
 import model.library.book.Genre;
+import util.Util;
 
 public class RentalService {
 	private HashMap<Client, HashMap<Client, List<Book>>> rentedBooks = new HashMap<>();
 
 	public double penaltyAmountCalc(Book book) {
+
 		int daysBorrowedAboveLimit = book.getDaysBorrowed() - 14;
 		double penalty = daysBorrowedAboveLimit * book.getValue() * 0.01;
 		if (penalty < 0.5)
 			penalty = 0.5;
 		if (book.getBookType() == BookType.BESTSELLER)
 			penalty *= 2;
-		System.out.println(String.format("Naliczono karê z tytu³u opóŸnienia równ¹ %sPLN", penalty));
+		System.out.println(
+				String.format("Naliczono karê z tytu³u opóŸnienia równ¹ %s", Util.plNumberFormat.format(penalty)));
 		return penalty;
 	}
 
@@ -71,7 +76,6 @@ public class RentalService {
 				}
 			}
 		}
-		
 
 		return conditionCheck;
 	}
@@ -113,10 +117,9 @@ public class RentalService {
 				} else
 					listaDoSprawdzenia.get(book.getGenre()).add(book);
 			}
-			
-			
 
-			if (!(getRentedBooks().get(organization) == null) && !(getRentedBooks().get(organization).get(person) == null)) {
+			if (!(getRentedBooks().get(organization) == null)
+					&& !(getRentedBooks().get(organization).get(person) == null)) {
 				for (Book book : getRentedBooks().get(organization).get(person)) {
 					if (!listaDoSprawdzenia.containsKey(book.getGenre())) {
 						listaDoSprawdzenia.put(book.getGenre(), new ArrayList<>());
@@ -125,7 +128,7 @@ public class RentalService {
 						listaDoSprawdzenia.get(book.getGenre()).add(book);
 				}
 			}
-			
+
 			conditionCheck = genreCheck(listaDoSprawdzenia, conditionCheck, checkNumber);
 		}
 
@@ -163,15 +166,13 @@ public class RentalService {
 			checkNumber = 10;
 			if (!(rentalService.getRentedBooks().get(client) == null)) {
 				int organizationMembersBookNumber = 0;
-				
-				
+
 				for (List<Book> books : rentalService.getRentedBooks().get(client).values()) {
 					for (int i = 0; i < books.size(); i++) {
 						organizationMembersBookNumber += 1;
 					}
 				}
-				
-				
+
 				if (!(organizationMembersBookNumber < checkNumber)) {
 					conditionCheck = false;
 					System.out.println(String.format(
@@ -180,7 +181,7 @@ public class RentalService {
 				}
 
 			}
-			
+
 		}
 
 		return conditionCheck;

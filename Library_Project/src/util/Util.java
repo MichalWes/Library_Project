@@ -1,14 +1,19 @@
 package util;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Predicate;
 
 import model.client.Client;
 import model.library.book.Book;
 
 public class Util {
+	
+	public static NumberFormat plNumberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault());
 	
 	public static int idCreator(List<Client> bazaKlientow) {
 		int id;
@@ -32,7 +37,7 @@ public class Util {
 		return false;
 	}
 	
-	public static List<Book> filter(List<Book> books, BookPredicate bookPredicate){
+	public static List<Book> filter(List<Book> books, Predicate<Book> bookPredicate){
 		List<Book> result = new ArrayList<>();
 		
 		for (Book book : books) {

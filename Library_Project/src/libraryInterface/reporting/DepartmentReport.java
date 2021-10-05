@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import model.client.Client;
 import model.library.DepartmentType;
+import util.Util;
 
 public class DepartmentReport {
 	private DepartmentType department;
@@ -87,7 +88,7 @@ public class DepartmentReport {
 				+ (numberOfBooksBorrowedClient != null
 						? "numberOfBooksBorrowedClient=" + numberOfBooksBorrowedClient + ", "
 						: "")
-				+ "lateBooksReturned=" + lateBooksReturned + ", totalFines=" + totalFines + "]";
+				+ "lateBooksReturned=" + lateBooksReturned + ", totalFines=" + Util.plNumberFormat.format(totalFines) + "]";
 	}
 	
 
