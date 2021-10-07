@@ -44,10 +44,10 @@ public class ClientThread implements Runnable {
 		clientActionsService.setLoggedUser(clientFound.get());
 		System.out.println(clientActionsService.getLoggedUser());
 		while (!booksToBorrow.isEmpty()) {
-			libraryActionsService.borrow(library, booksToBorrow.pollLast());
+			libraryActionsService.borrow(library, booksToBorrow.pollFirst());
 		}
 		while (!booksToReturn.isEmpty()) {
-			libraryActionsService.returnBook(library, booksToReturn.pollLast(), daysBorrowed);
+			libraryActionsService.returnBook(library, booksToReturn.pollFirst(), daysBorrowed);
 		}
 	}
 }

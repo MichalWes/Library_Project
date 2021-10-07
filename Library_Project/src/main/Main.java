@@ -66,10 +66,13 @@ public class Main {
 		library.getDepartments().get(DepartmentType.A).add(
 				new Book("Kwantechizm", "Andrzej Dragan", BookType.NORMAL, DepartmentType.A, Genre.SCIENCE_FICTION, 35));
 		library.getDepartments().get(DepartmentType.A).add(
-				new Book("Remigiusz Mróz", "Zaginiêcie", BookType.NORMAL, DepartmentType.A, Genre.FANTASY, 27));
+				new Book("Zaginiêcie", "Remigiusz Mróz", BookType.NORMAL, DepartmentType.A, Genre.FANTASY, 27));
 		
 
 		Deque<String> booksToBorrowClient1 = new ArrayDeque<>();
+		booksToBorrowClient1.add("Zaginiêcie");
+		booksToBorrowClient1.add("Factfullness");
+		booksToBorrowClient1.add("What if?");
 		booksToBorrowClient1.add("Wa³kowanie Ameryki");
 		booksToBorrowClient1.add("Kwantechizm");
 		Deque<String> booksToReturnClient1 = new ArrayDeque<>();
@@ -86,9 +89,11 @@ public class Main {
 		ClientThread clientThread2 = new ClientThread(library, clientActionsService, libraryActionsService,
 				bazaKlientow, DepartmentType.A, booksToBorrowClient2, booksToReturnClient2, 90, 15);
 		
-		
-		clientThread2.run();
+		new Thread(clientThread1).start();
+		new Thread(clientThread2).start();
 		clientThread1.run();
+		clientThread2.run();
+	
 
 	}
 
