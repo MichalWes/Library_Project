@@ -85,6 +85,8 @@ public class Main {
 		booksToReturnClient2.add("Kwantechizm");
 		ClientThread clientThread2 = new ClientThread(library, clientActionsService, libraryActionsService,
 				bazaKlientow, DepartmentType.A, booksToBorrowClient2, booksToReturnClient2, 90, 15);
+		
+		
 		clientThread2.run();
 		clientThread1.run();
 
