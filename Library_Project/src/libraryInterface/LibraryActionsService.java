@@ -168,38 +168,33 @@ public class LibraryActionsService {
 
 	}
 
-	public boolean borrow(Library library, String bookTitle) {
-		if (clientActionsService.getLoggedUser().getMotherDepartment() != clientActionsService.getDepartmentActive()) {
+	public synchronized boolean borrow(Library library, String bookTitle, Client loggedUser,
+			DepartmentType departmentActive) {
+		if (loggedUser.getMotherDepartment() != departmentActive) {
 			System.out.println(
 					"W tym oddziale nie mo¿na wypo¿yczaæ ksi¹¿ek, proszê o skorzystanie z dzia³u macierzystego");
 
 		} else {
 
-			for (Book book : library.getDepartments().get(clientActionsService.getDepartmentActive())) {
+			for (Book book : library.getDepartments().get(departmentActive)) {
 				if (bookTitle.equals(book.getTitle())) {
-					if (clientActionsService.getLoggedUserOrganization() == null
-							&& clientActionsService.getLoggedUser() instanceof Person) {
-						if (rentalService.clientBorrowConditionsChecker((Person) clientActionsService.getLoggedUser(),
-								rentalService, book)) {
-							borrowBook(library, book, clientActionsService.getLoggedUser());
-							System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi "
-									+ clientActionsService.getLoggedUser());
-							reports.addBookLent(clientActionsService.getDepartmentActive());
-							reports.addBookBorrowedClient(clientActionsService.getLoggedUser(),
-									clientActionsService.getDepartmentActive());
+					if (clientActionsService.getLoggedUserOrganization() == null && loggedUser instanceof Person) {
+						if (rentalService.clientBorrowConditionsChecker((Person) loggedUser, rentalService, book)) {
+							borrowBook(library, book, loggedUser);
+							System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi " + loggedUser);
+							reports.addBookLent(departmentActive);
+							reports.addBookBorrowedClient(loggedUser, departmentActive);
 							return true;
 						} else
 							return false;
 					} else if (clientActionsService.getLoggedUserOrganization() == null
-							&& clientActionsService.getLoggedUser() instanceof Organization) {
-						if (rentalService.clientBorrowConditionsChecker(
-								(Organization) clientActionsService.getLoggedUser(), rentalService, book)) {
-							borrowBook(library, book, clientActionsService.getLoggedUser());
-							System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi "
-									+ clientActionsService.getLoggedUser());
-							reports.addBookLent(clientActionsService.getDepartmentActive());
-							reports.addBookBorrowedClient(clientActionsService.getLoggedUser(),
-									clientActionsService.getDepartmentActive());
+							&& loggedUser instanceof Organization) {
+						if (rentalService.clientBorrowConditionsChecker((Organization) loggedUser, rentalService,
+								book)) {
+							borrowBook(library, book, loggedUser);
+							System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi " + loggedUser);
+							reports.addBookLent(departmentActive);
+							reports.addBookBorrowedClient(loggedUser, departmentActive);
 							return true;
 						} else
 							return false;
@@ -378,8 +373,8 @@ public class LibraryActionsService {
 			System.out.println("Brak logowania");
 		return false;
 	}
-	
-	public boolean returnBook(Library library, String bookTitle, int daysBorrowed) {
+
+	public synchronized boolean returnBook(Library library, String bookTitle, int daysBorrowed) {
 		double penaltySum = 0.0;
 		HashMap<Client, HashMap<Client, List<Book>>> borrowedBooks = rentalService.getRentedBooks();
 
@@ -567,7 +562,7 @@ public class LibraryActionsService {
 		System.out.println(String.format("£¹czna kara to %s", Util.plNumberFormat.format(penaltySum)));
 		return penaltySum;
 	}
-	
+
 	private double penaltyCalc(int daysBorrowed, double penaltySum, Book book) {
 		if (book.getBorrowedFrom() != clientActionsService.getDepartmentActive()
 				&& book.getBookDepartment() != clientActionsService.getDepartmentActive()) {

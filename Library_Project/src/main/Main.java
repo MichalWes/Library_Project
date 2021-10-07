@@ -1,9 +1,10 @@
 package main;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import libraryInterface.LibraryActionsService;
 import libraryInterface.LibraryInterface;
@@ -59,41 +60,66 @@ public class Main {
 
 		library.getDepartments().get(DepartmentType.A).add(
 				new Book("Wa³kowanie Ameryki", "Marek Wa³kuski", BookType.NORMAL, DepartmentType.A, Genre.GUIDE, 48));
-		library.getDepartments().get(DepartmentType.A).add(
-				new Book("What if?", "Randall Munroe", BookType.NORMAL, DepartmentType.A, Genre.FANTASY, 58));
-		library.getDepartments().get(DepartmentType.A).add(
-				new Book("Factfullness", "Hans Rosling", BookType.NORMAL, DepartmentType.A, Genre.HISTORY, 43));
-		library.getDepartments().get(DepartmentType.A).add(
-				new Book("Kwantechizm", "Andrzej Dragan", BookType.NORMAL, DepartmentType.A, Genre.SCIENCE_FICTION, 35));
-		library.getDepartments().get(DepartmentType.A).add(
-				new Book("Zaginiêcie", "Remigiusz Mróz", BookType.NORMAL, DepartmentType.A, Genre.FANTASY, 27));
-		
+		library.getDepartments().get(DepartmentType.A)
+				.add(new Book("What if?", "Randall Munroe", BookType.NORMAL, DepartmentType.A, Genre.FANTASY, 58));
+		library.getDepartments().get(DepartmentType.A)
+				.add(new Book("Factfullness", "Hans Rosling", BookType.NORMAL, DepartmentType.A, Genre.HISTORY, 43));
+		library.getDepartments().get(DepartmentType.A).add(new Book("Kwantechizm", "Andrzej Dragan", BookType.NORMAL,
+				DepartmentType.A, Genre.SCIENCE_FICTION, 35));
+		library.getDepartments().get(DepartmentType.A)
+				.add(new Book("Zaginiêcie", "Remigiusz Mróz", BookType.NORMAL, DepartmentType.A, Genre.FANTASY, 27));
 
-		Deque<String> booksToBorrowClient1 = new ArrayDeque<>();
+		Optional<Client> clientFound1 = bazaKlientow.stream().filter(client1 -> client1.getId() == 99).findFirst();
+		Client loggedClient1 = clientFound1.get();
+		System.out.println(loggedClient1);
+		List<String> booksToBorrowClient1 = new ArrayList<>();
 		booksToBorrowClient1.add("Zaginiêcie");
 		booksToBorrowClient1.add("Factfullness");
 		booksToBorrowClient1.add("What if?");
 		booksToBorrowClient1.add("Wa³kowanie Ameryki");
 		booksToBorrowClient1.add("Kwantechizm");
-		Deque<String> booksToReturnClient1 = new ArrayDeque<>();
-		ClientThread clientThread1 = new ClientThread(library, clientActionsService, libraryActionsService,
-				bazaKlientow, DepartmentType.A, booksToBorrowClient1, booksToReturnClient1, 99, 15);
-		
-		
-		Deque<String> booksToBorrowClient2 = new ArrayDeque<>();
+		Collections.shuffle(booksToBorrowClient1);
+		List<String> booksToReturnClient1 = new ArrayList<>();
+		ClientThread clientThread1 = new ClientThread(loggedClient1, DepartmentType.A, library, libraryActionsService,
+				booksToBorrowClient1, booksToReturnClient1, 15);
+
+		Optional<Client> clientFound2 = bazaKlientow.stream().filter(client2 -> client2.getId() == 90).findFirst();
+		Client loggedClient2 = clientFound2.get();
+		System.out.println(loggedClient2);
+		List<String> booksToBorrowClient2 = new ArrayList<>();
+		booksToBorrowClient2.add("Zaginiêcie");
+		booksToBorrowClient2.add("Factfullness");
+		booksToBorrowClient2.add("What if?");
 		booksToBorrowClient2.add("Wa³kowanie Ameryki");
 		booksToBorrowClient2.add("Kwantechizm");
-		Deque<String> booksToReturnClient2 = new ArrayDeque<>();
-		booksToReturnClient2.add("Wa³kowanie Ameryki");
-		booksToReturnClient2.add("Kwantechizm");
-		ClientThread clientThread2 = new ClientThread(library, clientActionsService, libraryActionsService,
-				bazaKlientow, DepartmentType.A, booksToBorrowClient2, booksToReturnClient2, 90, 15);
+		Collections.shuffle(booksToBorrowClient2);
+		List<String> booksToReturnClient2 = new ArrayList<>();
+		// booksToReturnClient2.add("Wa³kowanie Ameryki");
+		// booksToReturnClient2.add("Kwantechizm");
+		ClientThread clientThread2 = new ClientThread(loggedClient2, DepartmentType.A, library, libraryActionsService,
+				booksToBorrowClient2, booksToReturnClient2, 15);
 		
+		Optional<Client> clientFound3 = bazaKlientow.stream().filter(client3 -> client3.getId() == 91).findFirst();
+		Client loggedClient3 = clientFound3.get();
+		System.out.println(loggedClient3);
+		List<String> booksToBorrowClient3 = new ArrayList<>();
+		booksToBorrowClient3.add("Zaginiêcie");
+		booksToBorrowClient3.add("Factfullness");
+		booksToBorrowClient3.add("What if?");
+		booksToBorrowClient3.add("Wa³kowanie Ameryki");
+		booksToBorrowClient3.add("Kwantechizm");
+		Collections.shuffle(booksToBorrowClient3);
+		List<String> booksToReturnClient3 = new ArrayList<>();
+		ClientThread clientThread3 = new ClientThread(loggedClient3, DepartmentType.A, library, libraryActionsService,
+				booksToBorrowClient3, booksToReturnClient3, 15);
+
 		new Thread(clientThread1).start();
 		new Thread(clientThread2).start();
-		clientThread1.run();
+		new Thread(clientThread3).start();
+
 		clientThread2.run();
-	
+		clientThread1.run();
+		clientThread3.run();
 
 	}
 

@@ -23,7 +23,7 @@ public class ClientActionsService {
 		return loggedUser;
 	}
 
-	public void setLoggedUser(Client loggedUser) {
+	public  void setLoggedUser(Client loggedUser) {
 		this.loggedUser = loggedUser;
 	}
 
