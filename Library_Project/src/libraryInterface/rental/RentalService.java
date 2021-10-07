@@ -1,10 +1,8 @@
 package libraryInterface.rental;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import model.client.Client;
 import model.client.Organization;

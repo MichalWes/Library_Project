@@ -36,14 +36,14 @@ public class LibraryInterface {
 
 			switch (action) {
 			case LOGON_NAME:
-				
+
 				if (clientActionsService.logonName(in)) {
 					break powitalny;
 				} else
 					break;
 
 			case LOGON_ORGANIZATION:
-				
+
 				if (clientActionsService.logonOrganization(in)) {
 					break powitalny;
 				} else

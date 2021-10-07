@@ -89,16 +89,16 @@ public class DummyClientGenerator {
 			}
 		}
 
-		for (Client client : bazaKlientow) {
-
-			if (client instanceof Organization) {
-				Organization organization = (Organization) client;
-				System.out.println(organization);
-				for (Person person : organization.getMembers()) {
-					System.out.println(person);
-				}
-			}
-		}
+//		for (Client client : bazaKlientow) {
+//
+//			if (client instanceof Organization) {
+//				Organization organization = (Organization) client;
+//				System.out.println(organization);
+//				for (Person person : organization.getMembers()) {
+//					System.out.println(person);
+//				}
+//			}
+//		}
 
 		return bazaKlientow;
 
