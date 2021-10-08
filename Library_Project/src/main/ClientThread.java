@@ -17,8 +17,6 @@ public class ClientThread implements Runnable {
 	private List<String> booksToReturn;
 	private int daysBorrowed;
 
-	
-
 	public ClientThread(Client loggedClient, DepartmentType departmentActive, Library library,
 			LibraryActionsService libraryActionsService, List<String> booksToBorrow, List<String> booksToReturn,
 			int daysBorrowed) {
@@ -35,11 +33,13 @@ public class ClientThread implements Runnable {
 	@Override
 	public void run() {
 
-		while (!booksToBorrow.isEmpty()) {
-			libraryActionsService.borrow(library, booksToBorrow.remove(booksToBorrow.size()-1),loggedClient, departmentActive);
+		if (!booksToBorrow.isEmpty()) {
+			libraryActionsService.borrow(library, booksToBorrow.remove((int) (booksToBorrow.size() * Math.random())),
+					loggedClient, departmentActive);
 		}
-		while (!booksToReturn.isEmpty()) {
-			libraryActionsService.returnBook(library, booksToReturn.remove(booksToBorrow.size()-1), daysBorrowed);
+		if (!booksToReturn.isEmpty()) {
+			libraryActionsService.returnBook(library,
+					booksToReturn.remove((int) (booksToBorrow.size() * Math.random())), daysBorrowed);
 		}
 	}
 }

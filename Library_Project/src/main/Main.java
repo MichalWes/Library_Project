@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import libraryInterface.LibraryActionsService;
 import libraryInterface.LibraryInterface;
@@ -98,7 +101,7 @@ public class Main {
 		// booksToReturnClient2.add("Kwantechizm");
 		ClientThread clientThread2 = new ClientThread(loggedClient2, DepartmentType.A, library, libraryActionsService,
 				booksToBorrowClient2, booksToReturnClient2, 15);
-		
+
 		Optional<Client> clientFound3 = bazaKlientow.stream().filter(client3 -> client3.getId() == 91).findFirst();
 		Client loggedClient3 = clientFound3.get();
 		System.out.println(loggedClient3);
@@ -113,13 +116,19 @@ public class Main {
 		ClientThread clientThread3 = new ClientThread(loggedClient3, DepartmentType.A, library, libraryActionsService,
 				booksToBorrowClient3, booksToReturnClient3, 15);
 
-		new Thread(clientThread1).start();
-		new Thread(clientThread2).start();
-		new Thread(clientThread3).start();
+		ClientThread[] clientThreads = { clientThread1, clientThread2, clientThread3 };
 
-		clientThread2.run();
-		clientThread1.run();
-		clientThread3.run();
+		System.out.println("--------------------------------------------------------------------------");
+
+		ExecutorService executor = Executors.newFixedThreadPool(3); //dodanie do metody borrow synchronized rozwi¹zuje problemy nieprawid³owego zachowania aplikacji.
+		executor.submit(clientThread1);
+		executor.submit(clientThread2);
+		executor.submit(clientThread3);
+
+//		new Thread(clientThread1).start();
+//		new Thread(clientThread2).start();
+//		new Thread(clientThread3).start();
+		executor.shutdown();
 
 	}
 

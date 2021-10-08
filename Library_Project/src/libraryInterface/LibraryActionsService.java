@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.locks.ReentrantLock;
 
 import libraryInterface.client.ClientActionsService;
 import libraryInterface.filter.Filter;
@@ -168,92 +169,101 @@ public class LibraryActionsService {
 
 	}
 
-	public synchronized boolean borrow(Library library, String bookTitle, Client loggedUser,
-			DepartmentType departmentActive) {
-		if (loggedUser.getMotherDepartment() != departmentActive) {
-			System.out.println(
-					"W tym oddziale nie mo¿na wypo¿yczaæ ksi¹¿ek, proszê o skorzystanie z dzia³u macierzystego");
+	ReentrantLock lock = new ReentrantLock();
 
-		} else {
+	public boolean borrow(Library library, String bookTitle, Client loggedUser, DepartmentType departmentActive) {
+		lock.lock();
+		try {
+			if (loggedUser.getMotherDepartment() != departmentActive) {
+				System.out.println(
+						"W tym oddziale nie mo¿na wypo¿yczaæ ksi¹¿ek, proszê o skorzystanie z dzia³u macierzystego");
 
-			for (Book book : library.getDepartments().get(departmentActive)) {
-				if (bookTitle.equals(book.getTitle())) {
-					if (clientActionsService.getLoggedUserOrganization() == null && loggedUser instanceof Person) {
-						if (rentalService.clientBorrowConditionsChecker((Person) loggedUser, rentalService, book)) {
-							borrowBook(library, book, loggedUser);
-							System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi " + loggedUser);
-							reports.addBookLent(departmentActive);
-							reports.addBookBorrowedClient(loggedUser, departmentActive);
-							return true;
-						} else
-							return false;
-					} else if (clientActionsService.getLoggedUserOrganization() == null
-							&& loggedUser instanceof Organization) {
-						if (rentalService.clientBorrowConditionsChecker((Organization) loggedUser, rentalService,
-								book)) {
-							borrowBook(library, book, loggedUser);
-							System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi " + loggedUser);
-							reports.addBookLent(departmentActive);
-							reports.addBookBorrowedClient(loggedUser, departmentActive);
-							return true;
-						} else
-							return false;
-					} else {
-						if (rentalService.clientBorrowConditionsChecker((Person) clientActionsService.getLoggedUser(),
-								rentalService, book)) {
-							borrowBook(library, book, clientActionsService.getLoggedUser());
-							System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi "
-									+ clientActionsService.getLoggedUser());
-							reports.addBookLent(clientActionsService.getDepartmentActive());
-							reports.addBookBorrowedClient(clientActionsService.getLoggedUser(),
-									clientActionsService.getDepartmentActive());
-							return true;
+			} else {
+
+				for (Book book : library.getDepartments().get(departmentActive)) {
+					if (bookTitle.equals(book.getTitle())) {
+						if (clientActionsService.getLoggedUserOrganization() == null && loggedUser instanceof Person) {
+							if (rentalService.clientBorrowConditionsChecker((Person) loggedUser, rentalService, book)) {
+								borrowBook(library, book, loggedUser);
+								System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi " + loggedUser);
+								reports.addBookLent(departmentActive);
+								reports.addBookBorrowedClient(loggedUser, departmentActive);
+								return true;
+							} else
+								return false;
+						} else if (clientActionsService.getLoggedUserOrganization() == null
+								&& loggedUser instanceof Organization) {
+							if (rentalService.clientBorrowConditionsChecker((Organization) loggedUser, rentalService,
+									book)) {
+								borrowBook(library, book, loggedUser);
+								System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi " + loggedUser);
+								reports.addBookLent(departmentActive);
+								reports.addBookBorrowedClient(loggedUser, departmentActive);
+								return true;
+							} else
+								return false;
 						} else {
-							System.out.println(
-									"Poniewa¿ jesteœ cz³onkiem organizacji, jest mo¿liwoœæ wypo¿yczenia ksi¹¿ki na organizacjê");
-							System.out.println("Trwa sprawdzanie czy takie wypo¿ycznie jest mo¿liwe");
 							if (rentalService.clientBorrowConditionsChecker(
-									(Organization) clientActionsService.getLoggedUserOrganization(), rentalService,
-									book)
-									&& rentalService.clientBorrowConditionsChecker(
-											(Person) clientActionsService.getLoggedUser(),
-											clientActionsService.getLoggedUserOrganization(), rentalService, book)) {
-								if (!rentalService.getRentedBooks()
-										.containsKey(clientActionsService.getLoggedUserOrganization())) {
-									rentalService.getRentedBooks().put(clientActionsService.getLoggedUserOrganization(),
-											new HashMap<>());
-									if (!rentalService.getRentedBooks()
-											.get(clientActionsService.getLoggedUserOrganization())
-											.containsKey(clientActionsService.getLoggedUser()))
-										rentalService.getRentedBooks()
-												.get(clientActionsService.getLoggedUserOrganization())
-												.put(clientActionsService.getLoggedUser(), new ArrayList<>());
-									rentalService.getRentedBooks().get(clientActionsService.getLoggedUserOrganization())
-											.get(clientActionsService.getLoggedUser()).add(book);
-								} else
-									rentalService.getRentedBooks().get(clientActionsService.getLoggedUserOrganization())
-											.get(clientActionsService.getLoggedUser()).add(book);
-
-								library.getDepartments()
-										.get(clientActionsService.getLoggedUserOrganization().getMotherDepartment())
-										.remove(book);
+									(Person) clientActionsService.getLoggedUser(), rentalService, book)) {
+								borrowBook(library, book, clientActionsService.getLoggedUser());
 								System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi "
-										+ clientActionsService.getLoggedUserOrganization());
+										+ clientActionsService.getLoggedUser());
 								reports.addBookLent(clientActionsService.getDepartmentActive());
-								reports.addBookBorrowedClient((Client) clientActionsService.getLoggedUserOrganization(),
+								reports.addBookBorrowedClient(clientActionsService.getLoggedUser(),
 										clientActionsService.getDepartmentActive());
 								return true;
+							} else {
+								System.out.println(
+										"Poniewa¿ jesteœ cz³onkiem organizacji, jest mo¿liwoœæ wypo¿yczenia ksi¹¿ki na organizacjê");
+								System.out.println("Trwa sprawdzanie czy takie wypo¿ycznie jest mo¿liwe");
+								if (rentalService.clientBorrowConditionsChecker(
+										(Organization) clientActionsService.getLoggedUserOrganization(), rentalService,
+										book)
+										&& rentalService.clientBorrowConditionsChecker(
+												(Person) clientActionsService.getLoggedUser(),
+												clientActionsService.getLoggedUserOrganization(), rentalService,
+												book)) {
+									if (!rentalService.getRentedBooks()
+											.containsKey(clientActionsService.getLoggedUserOrganization())) {
+										rentalService.getRentedBooks()
+												.put(clientActionsService.getLoggedUserOrganization(), new HashMap<>());
+										if (!rentalService.getRentedBooks()
+												.get(clientActionsService.getLoggedUserOrganization())
+												.containsKey(clientActionsService.getLoggedUser()))
+											rentalService.getRentedBooks()
+													.get(clientActionsService.getLoggedUserOrganization())
+													.put(clientActionsService.getLoggedUser(), new ArrayList<>());
+										rentalService.getRentedBooks()
+												.get(clientActionsService.getLoggedUserOrganization())
+												.get(clientActionsService.getLoggedUser()).add(book);
+									} else
+										rentalService.getRentedBooks()
+												.get(clientActionsService.getLoggedUserOrganization())
+												.get(clientActionsService.getLoggedUser()).add(book);
+
+									library.getDepartments()
+											.get(clientActionsService.getLoggedUserOrganization().getMotherDepartment())
+											.remove(book);
+									System.out.println("Wypo¿yczono ksi¹¿kê " + book + "u¿ytkownikowi "
+											+ clientActionsService.getLoggedUserOrganization());
+									reports.addBookLent(clientActionsService.getDepartmentActive());
+									reports.addBookBorrowedClient(
+											(Client) clientActionsService.getLoggedUserOrganization(),
+											clientActionsService.getDepartmentActive());
+									return true;
+								}
 							}
+							return false;
 						}
-						return false;
 					}
 				}
+				System.out.println("Nie ma takiej ksi¹¿ki");
+
 			}
-			System.out.println("Nie ma takiej ksi¹¿ki");
-
+			return false;
+		} finally {
+			lock.unlock();
 		}
-		return false;
-
 	}
 
 	public boolean borrowDept(Library library) {
