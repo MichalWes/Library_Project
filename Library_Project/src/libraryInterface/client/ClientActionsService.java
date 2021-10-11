@@ -1,6 +1,7 @@
 package libraryInterface.client;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import model.client.Client;
@@ -12,7 +13,7 @@ public class ClientActionsService {
 
 	private List<Client> bazaKlientow;
 	private Client loggedUser;
-	private Organization loggedUserOrganization;
+	private Optional<Organization> loggedUserOrganization;
 	private DepartmentType departmentActive;
 
 	public ClientActionsService(List<Client> bazaKlientow) {
@@ -23,15 +24,15 @@ public class ClientActionsService {
 		return loggedUser;
 	}
 
-	public  void setLoggedUser(Client loggedUser) {
+	public void setLoggedUser(Client loggedUser) {
 		this.loggedUser = loggedUser;
 	}
 
-	public Organization getLoggedUserOrganization() {
+	public Optional<Organization> getLoggedUserOrganization() {
 		return loggedUserOrganization;
 	}
 
-	public void setLoggedUserOrganization(Organization loggedUserOrganization) {
+	public void setLoggedUserOrganization(Optional<Organization> loggedUserOrganization) {
 		this.loggedUserOrganization = loggedUserOrganization;
 	}
 
@@ -65,29 +66,31 @@ public class ClientActionsService {
 	public boolean logonId(Scanner in) {
 		System.out.println("Proszê podaæ ID: ");
 		int clientId = in.nextInt();
-		for (Client client : bazaKlientow) {
-			if (client.getId() == clientId) {
-				if (client.equals(loggedUser)) {
-					System.out.println("Jest ju¿ Pani/Pan/Organizacja zalogowana/y");
-					return true;
-				}
-				departmentActive = setDepartment(in);
-				loggedUser = client;
-				if (client instanceof Organization) {
-					Organization organization = (Organization) client;
-					System.out.println("Witaj " + organization.getOrganizationName() + "!!!");
-					loggedUserOrganization = null;
-				} else {
-					Person person = (Person) client;
-					System.out.println("Witaj " + person.getName() + " " + person.getSurName() + "!!!");
-					organizationCheck(person);
-				}
-				System.out.println("Poprawnie zalogowano do biblioteki");
-				return true;
+		
+		Optional<Client> loggedCheck = bazaKlientow.stream().filter(client -> client.getId() == clientId).findAny();
+		if (loggedCheck.get().equals(loggedUser)) {
+			System.out.println("Jest ju¿ Pani/Pan/Organizacja zalogowana/y");
+			return true;
+		} else if (loggedCheck.isEmpty()) {
+			System.out.println("Nie znaleziono u¿ytkownika, proszê spróbowaæ ponownie.");
+			return false;
+		} else {
+
+			departmentActive = setDepartment(in);
+			loggedUser = loggedCheck.get();
+
+			if (loggedUser instanceof Organization) {
+				Organization organization = (Organization) loggedUser;
+				System.out.println("Witaj " + organization.getOrganizationName() + "!!!");
+				loggedUserOrganization = null;
+			} else {
+				Person person = (Person) loggedUser;
+				System.out.println("Witaj " + person.getName() + " " + person.getSurName() + "!!!");
+				organizationCheck(person);
 			}
+			System.out.println("Poprawnie zalogowano do biblioteki");
+			return true;
 		}
-		System.out.println("Nie znaleziono u¿ytkownika, proszê spróbowaæ ponownie.");
-		return false;
 	}
 
 	public boolean logonName(Scanner in) {
@@ -145,7 +148,7 @@ public class ClientActionsService {
 			for (Client clientOrg : bazaKlientow) {
 				if (clientOrg instanceof Organization) {
 					if (((Organization) clientOrg).getMembers().contains(person)) {
-						loggedUserOrganization = (Organization) clientOrg;
+						loggedUserOrganization = Optional.of((Organization) clientOrg);
 					}
 				}
 			}
@@ -153,7 +156,7 @@ public class ClientActionsService {
 			loggedUserOrganization = null;
 
 		if (person.isInOrganization()) {
-			System.out.println("Poniewa¿ nale¿ysz do organizacji " + loggedUserOrganization.getOrganizationName()
+			System.out.println("Poniewa¿ nale¿ysz do organizacji " + loggedUserOrganization.get().getOrganizationName()
 					+ " jesteœ zalogowana/y te¿ w jej imieniu");
 		}
 	}
