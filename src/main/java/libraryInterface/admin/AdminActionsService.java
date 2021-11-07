@@ -1,8 +1,8 @@
 package libraryInterface.admin;
 
-
 import libraryInterface.rental.RentalActions;
 import model.library.Library;
+
 import java.util.Scanner;
 
 public class AdminActionsService {
@@ -48,18 +48,25 @@ public class AdminActionsService {
                     break;
 
                 case READ_FILE:
-                    var fileOperations = new FileOperations();
-                    library.addBooksToLibrary(fileOperations.readLibraryFromFile());
-                    System.out.println("Pomyœlnie dodano wygenerowane ksi¹¿ki do biblioteki");
+                    var fileOperationsRead = new FileOperations();
+                    library.addBooksToLibrary(fileOperationsRead.readLibraryFromFile());
+                    System.out.println("Pomyœlnie dodano odczytane z pliku ksi¹¿ki do biblioteki");
                     break;
 
                 case WRITE_FILE:
+                    var fileOperationsWrite = new FileOperations();
+                    fileOperationsWrite.writeLibrarytoFile(library);
+
                     break;
 
                 case WRITE_POSTGRE:
+                    var databaseOperationsPostgre = new DatabaseOperations();
+                    databaseOperationsPostgre.writePostgreSql(library);
                     break;
 
                 case WRITE_MYSQL:
+                    var databaseOperationsMySql = new DatabaseOperations();
+                    databaseOperationsMySql.writeMySql(library);
                     break;
 
                 case BACK_PRV:

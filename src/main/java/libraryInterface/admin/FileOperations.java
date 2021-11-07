@@ -31,6 +31,7 @@ public class FileOperations {
             System.err.println("Input/Output related exception");
             e.printStackTrace();
         }
+        System.out.println("Pomyœlnie zapisano ksi¹¿ki w pliku");
     }
 
     public ArrayList<Book> readLibraryFromFile() {
@@ -51,6 +52,7 @@ public class FileOperations {
             System.err.println("Input/Output related exception");
             e.printStackTrace();
         }
+        System.out.println("Pomyœlnie odczytano ksi¹¿ki z pliku");
         return zPliku;
     }
 }

@@ -10,7 +10,7 @@ public class BookMySqlDatabaseCrudPersister {
     public BookMySqlDatabaseCrudPersister() {
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             c = DriverManager
                     .getConnection("jdbc:mysql://localhost:3306/library",
                             "michal", "dupapupa");
