@@ -1,9 +1,9 @@
 package model.library.book;
 
+import model.library.DepartmentType;
+
 import java.io.Serializable;
 import java.util.UUID;
-
-import model.library.DepartmentType;
 
 public class Book implements Serializable {
     private static final long serialVersionUID = 4961785586454307645L;

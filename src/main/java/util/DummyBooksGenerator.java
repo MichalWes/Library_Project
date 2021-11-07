@@ -1,10 +1,10 @@
 package util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import model.library.book.Book;
 import model.library.book.BookFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DummyBooksGenerator {
 

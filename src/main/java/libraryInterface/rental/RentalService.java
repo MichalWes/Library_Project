@@ -1,9 +1,5 @@
 package libraryInterface.rental;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import model.client.Client;
 import model.client.Organization;
 import model.client.Person;
@@ -11,6 +7,10 @@ import model.library.book.Book;
 import model.library.book.BookType;
 import model.library.book.Genre;
 import util.Util;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class RentalService {
 	private HashMap<Client, HashMap<Client, List<Book>>> rentedBooks = new HashMap<>();

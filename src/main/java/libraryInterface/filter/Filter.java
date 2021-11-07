@@ -1,18 +1,16 @@
 package libraryInterface.filter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-
 import libraryInterface.client.ClientActionsService;
 import model.library.DepartmentType;
 import model.library.Library;
 import model.library.book.Book;
 import model.library.book.BookType;
 import model.library.book.Genre;
-import util.BookGenrePredicate;
-import util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Filter {
 

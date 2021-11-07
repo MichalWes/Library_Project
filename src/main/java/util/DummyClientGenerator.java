@@ -1,13 +1,9 @@
 package util;
 
+import model.client.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import model.client.Client;
-import model.client.Organization;
-import model.client.OrganizationFactory;
-import model.client.Person;
-import model.client.PersonFactory;
 
 public class DummyClientGenerator {
 

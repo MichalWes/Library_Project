@@ -1,11 +1,11 @@
 package main;
 
-import java.util.List;
-
 import libraryInterface.LibraryActionsService;
 import model.client.Client;
 import model.library.DepartmentType;
 import model.library.Library;
+
+import java.util.List;
 
 public class ClientThread implements Runnable {
 

@@ -1,23 +1,26 @@
 package libraryInterface;
 
-import java.util.Scanner;
-
+import libraryInterface.admin.AdminActionsService;
 import libraryInterface.client.ClientActions;
 import libraryInterface.client.ClientActionsService;
 import libraryInterface.rental.RentalActions;
 import model.library.Library;
+
+import java.util.Scanner;
 
 public class LibraryInterface {
 
     private Library library;
     private LibraryActionsService libraryActionsService;
     private ClientActionsService clientActionsService;
+    private AdminActionsService adminActionsService;
 
     public LibraryInterface(Library library, LibraryActionsService libraryActionsService,
-                            ClientActionsService clientActionsService) {
+                            ClientActionsService clientActionsService, AdminActionsService adminActionsService) {
         this.library = library;
         this.libraryActionsService = libraryActionsService;
         this.clientActionsService = clientActionsService;
+        this.adminActionsService = adminActionsService;
     }
 
     public void workWithLibrary() {
@@ -66,6 +69,7 @@ public class LibraryInterface {
                     break;
 
                 case LIBRARY_ADMIN:
+                    adminActionsService.adminActions(library, in);
                     break;
 
                 case ILLEGAL:
@@ -134,5 +138,7 @@ public class LibraryInterface {
         }
 
     }
+
+
 
 }

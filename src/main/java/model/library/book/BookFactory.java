@@ -1,10 +1,10 @@
 package model.library.book;
 
+import model.library.DepartmentType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import model.library.DepartmentType;
 
 public class BookFactory {
 	public List<String> titles = new ArrayList<>();

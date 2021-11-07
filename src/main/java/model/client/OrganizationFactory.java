@@ -1,11 +1,11 @@
 package model.client;
 
+import model.library.DepartmentType;
+import util.Util;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import model.library.DepartmentType;
-import util.Util;
 
 public class OrganizationFactory {
 	public List<String> organizationNames = new ArrayList<>();

@@ -6,6 +6,7 @@ public enum AdminActions {
     WRITE_FILE("Zapisz ksi¹¿ki do pliku"),
     WRITE_POSTGRE("Zapisz ksi¹¿ki do bazy danych PostgreSQL"),
     WRITE_MYSQL("Zapisz ksi¹¿ki do bazy danych MySQL"),
+    BACK_PRV("Wróæ do poprzedniego menu"),
     ILLEGAL("Niepoprawne polecenie - proszê spróbowaæ ponownie");
 
     private String action;

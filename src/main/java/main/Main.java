@@ -1,20 +1,8 @@
 package main;
 
-import java.io.EOFException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
-
 import libraryInterface.LibraryActionsService;
 import libraryInterface.LibraryInterface;
+import libraryInterface.admin.AdminActionsService;
 import libraryInterface.client.ClientActionsService;
 import libraryInterface.filter.Filter;
 import libraryInterface.rental.RentalService;
@@ -27,10 +15,11 @@ import model.library.Library;
 import model.library.book.Book;
 import model.library.book.BookType;
 import model.library.book.Genre;
-import util.BookMySqlDatabaseCrudPersister;
-import util.BookPostgresDatabaseCrudPersister;
-import util.DummyBooksGenerator;
 import util.DummyClientGenerator;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Locale;
 
 public class Main {
 
@@ -41,7 +30,7 @@ public class Main {
 
     public static void main(String[] args) throws SQLException {
 
-        Library library = new Library();
+        var library = new Library();
         library.getDepartments().get(DepartmentType.A).add(
                 new Book("Wa³kowanie Ameryki", "Marek Wa³kuski", BookType.NORMAL, DepartmentType.A, Genre.GUIDE, 48));
         library.getDepartments().get(DepartmentType.A)
@@ -52,25 +41,26 @@ public class Main {
                 DepartmentType.A, Genre.SCIENCE_FICTION, 35));
         library.getDepartments().get(DepartmentType.A)
                 .add(new Book("Zaginiêcie", "Remigiusz Mróz", BookType.NORMAL, DepartmentType.A, Genre.FANTASY, 27));
-        DummyClientGenerator dummyClientGenerator = new DummyClientGenerator();
+        var dummyClientGenerator = new DummyClientGenerator();
         List<Client> bazaKlientow = dummyClientGenerator.generate(40);
         bazaKlientow.add(new Person(99, DepartmentType.A, "Micha³", "Wêsierski"));
         bazaKlientow.add(new Person(90, DepartmentType.A, "Adrian", "Bronk"));
         bazaKlientow.add(new Person(91, DepartmentType.A, "Pawe³", "Ma³aszyñski"));
         bazaKlientow.add(new Person(92, DepartmentType.A, "Micha³", "Wiœniewski"));
-        ClientActionsService clientActionsService = new ClientActionsService(bazaKlientow);
-        RentalService rentalService = new RentalService();
-        DepartmentReport departmentReportA = new DepartmentReport(DepartmentType.A);
-        DepartmentReport departmentReportB = new DepartmentReport(DepartmentType.B);
-        DepartmentReport departmentReportC = new DepartmentReport(DepartmentType.C);
-        Reports reports = new Reports();
+        var clientActionsService = new ClientActionsService(bazaKlientow);
+        var adminActionsService = new AdminActionsService();
+        var rentalService = new RentalService();
+        var departmentReportA = new DepartmentReport(DepartmentType.A);
+        var departmentReportB = new DepartmentReport(DepartmentType.B);
+        var departmentReportC = new DepartmentReport(DepartmentType.C);
+        var reports = new Reports();
         reports.getLibraryReport().put(DepartmentType.A, departmentReportA);
         reports.getLibraryReport().put(DepartmentType.B, departmentReportB);
         reports.getLibraryReport().put(DepartmentType.C, departmentReportC);
-        Filter filter = new Filter(clientActionsService);
+        var filter = new Filter(clientActionsService);
         LibraryActionsService libraryActionsService = new LibraryActionsService(rentalService, filter, reports,
                 clientActionsService);
-        LibraryInterface libraryInterface = new LibraryInterface(library, libraryActionsService, clientActionsService);
+        LibraryInterface libraryInterface = new LibraryInterface(library, libraryActionsService, clientActionsService, adminActionsService);
         libraryInterface.workWithLibrary();
 
     }

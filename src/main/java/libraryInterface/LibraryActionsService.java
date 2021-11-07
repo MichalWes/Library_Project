@@ -1,15 +1,5 @@
 package libraryInterface;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.concurrent.locks.ReentrantLock;
-
 import libraryInterface.client.ClientActionsService;
 import libraryInterface.filter.Filter;
 import libraryInterface.rental.RentalActions;
@@ -22,6 +12,11 @@ import model.library.DepartmentType;
 import model.library.Library;
 import model.library.book.Book;
 import util.Util;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class LibraryActionsService {
 

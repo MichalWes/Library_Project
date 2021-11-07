@@ -1,13 +1,13 @@
 package libraryInterface.client;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
-
 import model.client.Client;
 import model.client.Organization;
 import model.client.Person;
 import model.library.DepartmentType;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
 public class ClientActionsService {
 
@@ -51,12 +51,13 @@ public class ClientActionsService {
 				+ ") | " + ClientActions.LOGON_ORGANIZATION + " (" + ClientActions.LOGON_ORGANIZATION.getAction()
 				+ ") | " + ClientActions.LOGON_ID + " (" + ClientActions.LOGON_ID.getAction() + ") | " + "\n"
 				+ ClientActions.CHANGE_DEPARTMENT + " (" + ClientActions.CHANGE_DEPARTMENT.getAction() + ") | "
-				+ ClientActions.SHOW_ALL_CLIENTS + " (" + ClientActions.SHOW_ALL_CLIENTS.getAction() + ")");
+				+ ClientActions.SHOW_ALL_CLIENTS + " (" + ClientActions.SHOW_ALL_CLIENTS.getAction() + ") | "
+				+ ClientActions.LIBRARY_ADMIN + " (" + ClientActions.LIBRARY_ADMIN.getAction() + ")");
 
 		try {
 			actionStr = in.next().toUpperCase();
 		} catch (Exception e) {
-			System.out.println("DUPA");
+			System.out.println("B³¹d odczytu");
 			e.printStackTrace();
 		}
 

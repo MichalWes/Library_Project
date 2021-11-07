@@ -1,9 +1,9 @@
 package model.client;
 
+import model.library.DepartmentType;
+
 import java.util.HashSet;
 import java.util.Objects;
-
-import model.library.DepartmentType;
 
 public class Organization extends Client {
 

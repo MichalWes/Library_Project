@@ -1,9 +1,9 @@
 package libraryInterface.reporting;
 
-import java.util.HashMap;
-
 import model.client.Client;
 import model.library.DepartmentType;
+
+import java.util.HashMap;
 
 public class Reports {
 	private HashMap<DepartmentType, DepartmentReport> libraryReport = new HashMap<>();

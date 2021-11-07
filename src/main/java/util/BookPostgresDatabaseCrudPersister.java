@@ -1,9 +1,6 @@
 package util;
 
-import model.library.DepartmentType;
 import model.library.book.Book;
-import model.library.book.BookType;
-import model.library.book.Genre;
 
 import java.sql.*;
 

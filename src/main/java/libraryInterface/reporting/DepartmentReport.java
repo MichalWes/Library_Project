@@ -1,11 +1,11 @@
 package libraryInterface.reporting;
 
-import java.util.HashMap;
-import java.util.Objects;
-
 import model.client.Client;
 import model.library.DepartmentType;
 import util.Util;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public class DepartmentReport {
 	private DepartmentType department;

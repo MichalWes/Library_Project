@@ -1,8 +1,8 @@
 package model.client;
 
-import java.util.Objects;
-
 import model.library.DepartmentType;
+
+import java.util.Objects;
 
 public class Person extends Client {
 	private String name;

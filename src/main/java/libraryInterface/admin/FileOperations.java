@@ -5,7 +5,7 @@ import model.library.Library;
 import model.library.book.Book;
 
 import java.io.*;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class FileOperations {
@@ -33,8 +33,8 @@ public class FileOperations {
         }
     }
 
-    public HashSet<Book> readLibraryFromFile() {
-        HashSet<Book> zPliku = new HashSet<>();
+    public ArrayList<Book> readLibraryFromFile() {
+        ArrayList<Book> zPliku = new ArrayList<>();
         try (var in = new ObjectInputStream(new FileInputStream(projectPath + fileName))) {
             while (true) {
                 var object = in.readObject();
@@ -45,6 +45,8 @@ public class FileOperations {
         } catch (ClassNotFoundException e) {
             System.err.println("Class of serialized object cannot be found");
             e.printStackTrace();
+        } catch (EOFException e) {
+            System.out.println("Reading finished");
         } catch (IOException e) {
             System.err.println("Input/Output related exception");
             e.printStackTrace();

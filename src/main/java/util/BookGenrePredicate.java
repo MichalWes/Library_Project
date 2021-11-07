@@ -1,9 +1,9 @@
 package util;
 
-import java.util.function.Predicate;
-
 import model.library.book.Book;
 import model.library.book.Genre;
+
+import java.util.function.Predicate;
 
 public class BookGenrePredicate implements Predicate<Book>{
 	private final Genre genre;

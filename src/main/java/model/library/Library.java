@@ -1,10 +1,10 @@
 package model.library;
 
+import model.library.book.Book;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import model.library.book.Book;
 
 public class Library {
 	private HashMap<DepartmentType, List<Book>> departments;

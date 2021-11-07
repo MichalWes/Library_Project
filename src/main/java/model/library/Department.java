@@ -1,9 +1,9 @@
 package model.library;
 
+import model.library.book.Book;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import model.library.book.Book;
 
 public class Department {
 	private String name;

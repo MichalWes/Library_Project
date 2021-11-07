@@ -1,10 +1,10 @@
 package model.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import model.library.DepartmentType;
 import util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonFactory {
 	public List<String> maleNames = new ArrayList<>();
