@@ -18,7 +18,6 @@ public class Book implements Serializable {
     private int daysBorrowed;
     private int ID;
 
-
     public Book(String title, String author, BookType bookType, DepartmentType bookDepartment, Genre genre, int value) {
         this.title = title;
         this.author = author;
